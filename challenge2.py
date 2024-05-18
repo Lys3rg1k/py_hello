@@ -1,3 +1,2 @@
 import sys
-print("Hello,", sys.argv[1])
-
+print(f"Hello, {sys.argv[1]}")
