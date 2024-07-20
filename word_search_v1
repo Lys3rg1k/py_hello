@@ -1,0 +1,87 @@
+import math     
+
+puzzle = [["a","b","c","d","e"], ["f","g","h","i","j"], ["k","l","m","n","o"], ["p","q","r","s","t"], ["u","v","w","x","y"]]
+word_list = ["glq","sni","ghi","xwv","kgc","osw","mno","wxy","mlk","tsr"]
+
+
+def stringReverse(strToRev) :
+    strOut = ""
+    for i in range(len(strToRev),0,-1) :
+        strOut += strToRev[i-1]
+    return(strOut)
+
+def stepLeftRight(inputArray) :
+    x = 0
+    y = 0
+    strOut = ""
+    for y in range(len(puzzle)) :
+        for x in range(len(puzzle)) :
+            strOut += puzzle[y][x]
+    return(strOut)
+
+def stepTopDown(inputArray) :
+    x = 0
+    y = 0
+    strOut = ""
+    for y in range(len(puzzle)) :
+        for x in range(len(puzzle)) :
+            strOut += puzzle[x][y]
+    return(strOut)
+
+def stepDiagUpRight(inputArray) :
+    x = 0
+    y = (2*(len(puzzle)-1))
+    y_step = y
+    strOut = ""
+    for i in range((2*len(puzzle)),0,-1) :
+        for j in range(len(puzzle)) :
+                if y >= 0 and y < len(puzzle) :
+                    strOut += puzzle[y][x]
+                    x += 1
+                    y -= 1
+                else :
+                    x += 1
+                    y -= 1
+        y_step -= 1
+        x = 0
+        y = y_step
+    return(strOut)
+
+
+print("The length is", len(puzzle))
+print("Let's do a word search! Here is the puzzle board.")
+for i in range(len(puzzle)) :
+    for j in range(len(puzzle)) :
+        print(puzzle[i][j], end=" ")
+    print()
+print()
+
+str_LeftToRight = stepLeftRight(puzzle)
+str_RightToLeft = stringReverse(stepLeftRight(puzzle))
+str_TopToBottom = stepTopDown(puzzle)
+str_BottomToTop = stringReverse(stepTopDown(puzzle))
+str_DiagUpRight = stepDiagUpRight(puzzle)
+str_DiagDownLeft = stringReverse(stepDiagUpRight(puzzle))
+
+print("The puzzle, from left to right, is " + str_LeftToRight)
+print("The puzzle, from right to left, is " + str_RightToLeft)
+print("The puzzle, from top to bottom, is " + str_TopToBottom)
+print("The puzzle, from bottom to top, is " + str_BottomToTop)
+print("The puzzle, from bottom left to top right, is " + str_DiagUpRight)
+print("The puzzle, from top right to bottom left, is " + str_DiagDownLeft)
+print("Finding words in word list...\n")
+
+
+for i in range(len(word_list)) :
+    if word_list[i] in str_LeftToRight :
+        print("Word", word_list[i], "found in the left to right direction at string position", str_LeftToRight.find(word_list[i]))
+        print("Coordinates X,Y =", (str_LeftToRight.find(word_list[i])+1) % len(puzzle),",",math.ceil((str_LeftToRight.find(word_list[i])) / len(puzzle)))
+
+for i in range(len(word_list)) :
+    if word_list[i] in str_RightToLeft :
+        print("Word", word_list[i], "found in the right to left direction at string position", str_RightToLeft.find(word_list[i]))
+        xpos_in_LtR = (len(str_LeftToRight)) - 1 - str_RightToLeft.find(word_list[i])
+        print("This corresponds to the left-to-right string position of", xpos_in_LtR)
+        ypos = math.ceil(xpos_in_LtR / len(puzzle))
+        print("Coordinates X,Y =", (xpos_in_LtR+1) % len(puzzle),",", ypos)
+
